@@ -1,5 +1,7 @@
 package sokoban;
 
+
+
 public class Niveau {
 	
 	private String nom;
@@ -18,6 +20,7 @@ public class Niveau {
 	public Niveau() {
 		tab = new int [1][1];
 		lignes = colonnes = 0;
+		
 	}
 	
 	private int ajuste (int c, int i) {
@@ -84,27 +87,49 @@ public class Niveau {
 		}
 	}
 	
-	public boolean deplace (int j, int i) {
+	public Coup deplace (int j, int i) {
+		Coup resultat = new Coup();
 		if (this.aMur(i, j)) {
-			return false;
+			return null;
 		}else if (this.aCaisse(i, j)) {
 			int dx = j - pousseurC;
 			int dy = i - pousseurL;
 			int ax = j + dx;
 			int ay = i + dy;
 			if (this.estLibre(ay, ax)) {
+				
+				resultat.ajoutDep(j, i, ax, ay);
 				this.supprime(CAISSE, i, j);
 				this.ajouteCaisse(ay, ax);
+				
+				resultat.ajoutDep(pousseurC, pousseurL, j, i);
 				this.supprime(POUSSEUR, pousseurL, pousseurC);
 				this.ajoutePousseur(i, j);
-			} else {
-				return false;
+				
+			}else {
+				return null;
 			}
 		}else {
+			resultat.ajoutDep(pousseurC, pousseurL, j, i);
 			this.supprime(POUSSEUR, pousseurL, pousseurC);
 			this.ajoutePousseur(i, j);
+			
 		}
-		return true;
+		return resultat;
+	}
+	
+	public void undo (Deplacement d) {
+		int i = d.versL;
+		int j = d.versC;
+		int ay = d.depL;
+		int ax = d.depC;
+		if (this.aCaisse(i, j)) {
+			this.supprime(CAISSE, i, j);
+			this.ajouteCaisse(ay, ax);
+		}else {
+			this.supprime(POUSSEUR, pousseurL, pousseurC);
+			this.ajoutePousseur(ay, ax);
+		}
 	}
 	
 	public void videCase(int i, int j) {
@@ -156,4 +181,6 @@ public class Niveau {
 	public boolean estLibre(int i, int j) {
 		return !this.aCaisse(i, j) && !this.aMur(i, j);
 	}
+
+	
 }

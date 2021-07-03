@@ -3,7 +3,7 @@ package sokoban;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,10 +13,11 @@ import javax.swing.JComponent;
 
 import Global.Configuration;
 
+
 public class NiveauGraphique extends JComponent {
 	Jeu jeu;
 	Image pousseur, mur, but, caisse, caisse_sur_but, sol;
-
+	
 	int pas;
 	
 	private Image chargerImage (String nom) {
@@ -40,6 +41,7 @@ public class NiveauGraphique extends JComponent {
 		caisse = chargerImage("Images" + File.separator + "caisse.png");
 		caisse_sur_but = chargerImage("Images" + File.separator + "caisse_sur_but.png");
 		sol = chargerImage("Images" + File.separator + "sol.png");
+		
 	}
 	
 	public int getPas() {
@@ -66,10 +68,16 @@ public class NiveauGraphique extends JComponent {
 	
 	public void tapAuClavier (int c, int l) {
 		if (!jeu.deplace(c+jeu.pousseurC(), l+jeu.pousseurL())) {
+			
 			System.exit(0);
 		}else {
 			this.repaint();
 		}
+	}
+	
+	public void undo() {
+		jeu.undo();
+		this.repaint();
 	}
 	
 	public void paintComponent (Graphics g) {
@@ -103,4 +111,6 @@ public class NiveauGraphique extends JComponent {
 		}
 		drawable.drawImage(pousseur, jeu.pousseurC()*pas, jeu.pousseurL()*pas, pas, pas, null);
 	}
+
+	
 }
