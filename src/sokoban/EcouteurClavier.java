@@ -40,6 +40,9 @@ public class EcouteurClavier implements KeyListener {
 		case KeyEvent.VK_ESCAPE :
 			System.exit(0);
 			break;
+		case KeyEvent.VK_SPACE :
+			ng.undo();
+			break;
 		default :
 			Configuration.instance().logger().info("la touche clavier n'est pas implementée !");
 			
